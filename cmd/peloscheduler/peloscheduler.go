@@ -65,6 +65,8 @@ func queryAndNotify(appConfig config.Config) {
 		); err != nil {
 			fmt.Printf("Error sending message: %+v\n", err)
 		}
+	} else {
+		fmt.Printf("Earliest available is %s\n", firstAvailable.Format(time.RFC1123))
 	}
 }
 
