@@ -11,6 +11,7 @@ import (
 )
 
 const dateLayout = "2006-01-02T15:04:05-07:00"
+
 const operationName = "OrderDelivery"
 const requestQuery = `
 query OrderDelivery($id: ID!, $isReschedule: Boolean = false) {
