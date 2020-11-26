@@ -30,7 +30,7 @@ func main() {
 }
 
 func queryAndNotify(appConfig config.Config) {
-	fmt.Println("Querying Peloton...")
+	fmt.Printf("Querying Peloton at %s...\n", time.Now().Format(time.RFC1123))
 	order, orderErr := peloton.FetchOrder(appConfig.Peloton.OrderID)
 	if orderErr != nil {
 		fmt.Printf("Received error fetching from Peloton: %+v\n", orderErr)
