@@ -24,12 +24,19 @@ func FromFile(filePath string) (Config, error) {
 }
 
 type Config struct {
-	Peloton Peloton `json:"peloton"`
-	Twilio  Twilio  `json:"twilio"`
+	Peloton    Peloton    `json:"peloton"`
+	OneMedical OneMedical `json:"one_medical"`
+	Twilio     Twilio     `json:"twilio"`
 }
 
 type Peloton struct {
 	OrderID       string `json:"order_id"`
+	QueryInterval string `json:"query_interval"`
+}
+
+type OneMedical struct {
+	Username      string `json:"username"`
+	Password      string `json:"password"`
 	QueryInterval string `json:"query_interval"`
 }
 
