@@ -1,13 +1,8 @@
 package peloton
 
 import (
-	"bytes"
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
+	"github.com/goddardcm/peloscheduler/internal/httputils"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 const dateLayout = "2006-01-02T15:04:05-07:00"
@@ -68,40 +63,22 @@ type graphqlResponse struct {
 }
 
 func FetchOrder(orderID string) (Order, error) {
+	request := graphqlRequest{
+		OperationName: operationName,
+		Variables: map[string]interface{}{
+			"isReschedule": true,
+			"id":           orderID,
+		},
+		Query: requestQuery,
+	}
 	response := graphqlResponse{}
 
-	reqBytes, reqErr := json.Marshal(
-		graphqlRequest{
-			OperationName: operationName,
-			Variables: map[string]interface{}{
-				"isReschedule": true,
-				"id":           orderID,
-			},
-			Query: requestQuery,
-		},
-	)
-	if reqErr != nil {
-		return response.Data.Order, errors.WithStack(reqErr)
-	}
-
-	res, resErr := http.Post(
+	httpErr := httputils.DoRequest(
 		"https://graph.prod.k8s.onepeloton.com/graphql",
-		"application/json",
-		bytes.NewReader(reqBytes),
+		"",
+		request,
+		&response,
 	)
-	if resErr != nil {
-		return response.Data.Order, errors.WithStack(resErr)
-	}
-	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		responseBody, _ := ioutil.ReadAll(res.Body)
-		return response.Data.Order, errors.Errorf("Received non-200 from Peloton: [%d] %s", res.StatusCode, string(responseBody))
-	}
-
-	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
-		return response.Data.Order, errors.WithStack(err)
-	}
-
-	return response.Data.Order, nil
+	return response.Data.Order, httpErr
 }
