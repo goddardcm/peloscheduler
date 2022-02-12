@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"os"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -26,6 +27,7 @@ func FromFile(filePath string) (Config, error) {
 type Config struct {
 	Peloton    Peloton    `json:"peloton"`
 	OneMedical OneMedical `json:"one_medical"`
+	OpenTable  OpenTable  `json:"open_table"`
 	Twilio     Twilio     `json:"twilio"`
 }
 
@@ -38,6 +40,15 @@ type OneMedical struct {
 	Username      string `json:"username"`
 	Password      string `json:"password"`
 	QueryInterval string `json:"query_interval"`
+}
+
+type OpenTable struct {
+	RestaurantId  int64     `json:"restaurant_id"`
+	NumberOfSeats int64     `json:"number_of_seats"`
+	TimesToQuery  []string  `json:"times_to_query"`
+	QueryDate     string    `json:"query_date"`
+	LastDate      time.Time `json:"last_date"`
+	QueryInterval string    `json:"query_interval"`
 }
 
 type Twilio struct {
